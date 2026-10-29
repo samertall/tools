@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0c111d" />
+  <meta name="description" content="LumenChoice: an explainable, privacy-first decision studio. Rank options, explore tradeoffs and pressure-test your choice." />
+  <title>LumenChoice — Decisions, without the guesswork</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ambient ambient-a" aria-hidden="true"></div><div class="ambient ambient-b" aria-hidden="true"></div>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#workspace" aria-label="LumenChoice home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>Lumen<span class="brand-emphasis">Choice</span><small>DECISION INTELLIGENCE</small></span></a>
+      <nav class="topnav" aria-label="Main navigation"><a class="navlink active" href="#workspace" data-view-link="workspace">Workspace</a><a class="navlink" href="#method" data-view-link="method">How it works</a></nav>
+      <div class="header-right"><span class="privacy-indicator"><span class="live-dot"></span> Private by design</span><button class="icon-btn" id="reset-btn" title="Reset demo" aria-label="Reset demo">↺</button></div>
+    </header>
+    <div class="grid-layout" id="workspace">
+      <aside class="sidebar" aria-label="Decision settings">
+        <div class="sidebar-intro"><span class="eyebrow"><span class="tiny-asterisk">✳</span> YOUR DECISION SPACE</span><h2 id="side-title">Choose my next learning path</h2><p id="side-context">Find the best route to new skills.</p><button class="text-action" id="edit-decision-btn">Edit decision <span aria-hidden="true">↗</span></button></div>
+        <div class="side-rule"></div>
+        <div class="section-top"><h3>What matters to you</h3><button class="small-link" id="add-criterion-btn" title="Add new criterion">+ Add</button></div>
+        <p class="side-caption">Move the sliders. Every recommendation updates instantly.</p>
+        <div class="preset-row" role="group" aria-label="Weight presets"><button class="preset active" data-preset="balanced">Balanced</button><button class="preset" data-preset="budget">Budget-first</button><button class="preset" data-preset="career">Career-first</button></div>
+        <div id="criteria-list" class="criteria-list"></div>
+        <div class="weight-note"><span>Relative weights <span class="info-dot" title="Weights are normalized to 100% for scoring">i</span></span><strong id="weight-total">100%</strong></div>
+        <div class="side-rule"></div>
+        <div class="section-top"><h3>Decision toolkit</h3></div>
+        <div class="tool-actions"><button id="export-json-btn"><span>↧</span> Export decision <span class="tool-chevron">↗</span></button><button id="export-csv-btn"><span>▤</span> Download comparison <span class="tool-chevron">↗</span></button><button id="import-btn"><span>↥</span> Import saved decision <span class="tool-chevron">↗</span></button></div>
+        <input id="file-input" type="file" accept=".json,application/json" hidden />
+        <div class="sidebar-foot"><span class="shield-icon" aria-hidden="true">◈</span><p><strong>Your data stays yours.</strong><br>Saved only in this browser. No signup, tracking or server.</p></div>
+      </aside>
+      <main class="main-content">
+        <div class="hero"><div class="hero-copy"><div class="eyebrow">THE CLARITY WORKSPACE <span class="eyebrow-line"></span> 01 / ANALYZE</div><h1>Better decisions.<br><em>Less second-guessing.</em></h1><p>Compare what matters, explore every tradeoff, and find a decision you can actually explain.</p><div class="hero-actions"><button class="primary-btn" id="add-option-btn"><span class="plus">+</span> Add an option <span class="arrow">↗</span></button><button class="ghost-btn" id="copy-summary-btn">Copy summary <span>⧉</span></button></div></div><div class="orbit" aria-hidden="true"><span class="orbit-ring ring-1"></span><span class="orbit-ring ring-2"></span><span class="orbit-ring ring-3"></span><span class="orbit-center">✳</span><span class="orb-dot orb-dot-1"></span><span class="orb-dot orb-dot-2"></span><span class="orb-dot orb-dot-3"></span></div></div>
+        <section class="metrics" aria-label="Decision snapshot"><div class="metric-card"><span class="metric-label">TOP RECOMMENDATION</span><div id="metric-leader" class="metric-main">—</div><div class="metric-foot"><span class="mint-dot"></span><span id="metric-margin">Based on weighted priorities</span></div></div><div class="metric-card"><span class="metric-label">ROBUSTNESS SCORE</span><div class="metric-main" id="metric-robustness">—</div><div class="metric-foot"><span class="mint-dot"></span><span id="metric-robustness-caption">Across possible scenarios</span></div></div><div class="metric-card"><span class="metric-label">OPTIONS COMPARED</span><div class="metric-main" id="metric-count">4 <small>choices</small></div><div class="metric-foot"><span class="mint-dot"></span><span id="metric-criteria-count">5 criteria in the model</span></div></div></section>
+        <section class="ranking-section panel" aria-labelledby="ranking-title"><div class="panel-head"><div><div class="eyebrow subtle">LIVE ANALYSIS</div><h2 id="ranking-title">The decision leaderboard</h2><p>Transparent scores, calculated from your priorities.</p></div><span class="panel-label">WEIGHTED SCORE / 100</span></div><div id="ranking-list" class="ranking-list" aria-live="polite"></div><div class="ranking-note"><span class="note-icon">i</span><span>Scores reflect <strong>your inputs</strong>, not objective facts. Adjust your priorities to see what changes.</span></div></section>
+        <section class="matrix-section panel" aria-labelledby="matrix-title"><div class="panel-head"><div><div class="eyebrow subtle">SIDE BY SIDE</div><h2 id="matrix-title">The tradeoff matrix</h2><p>Every rating, in the open. Select an option to edit its evidence.</p></div><span class="panel-label">SCALE 0—10</span></div><div class="matrix-scroll" id="matrix-container"></div></section>
+        <section class="method-section panel" id="method" aria-labelledby="method-title"><div class="panel-head"><div><div class="eyebrow subtle">NO BLACK BOX</div><h2 id="method-title">How LumenChoice thinks</h2><p>A simple, inspectable method—no opaque AI verdicts.</p></div></div><div class="method-grid"><div><span class="step-num">01</span><h3>Make priorities explicit</h3><p>Set a weight for each criterion. They are normalized so only relative importance matters.</p></div><div><span class="step-num">02</span><h3>Score the evidence</h3><p>Rate each choice from 0 to 10. A weighted average creates a comparable score out of 100.</p></div><div><span class="step-num">03</span><h3>Challenge the result</h3><p>Run reproducible simulations with modest variations. See how easily the winner could change.</p></div></div><p class="method-disclaimer">Simulation results describe robustness under an assumed model, not real-world probabilities or guaranteed outcomes.</p></section>
+        <footer class="footbar"><span>✳ LUMENCHOICE / BUILT FOR NEXT BYTE HACKS V5</span><span>Made to be understood, not just trusted. © 2026</span></footer>
+      </main>
+      <aside class="insights" aria-label="Decision insights"><div class="insight-header"><div class="eyebrow">THE BIG PICTURE</div><h2>Understand your<br>best move<span>.</span></h2><p>Insights that show their work.</p></div><div class="insight-rule"></div>
+        <div class="insight-block"><div class="insight-title"><span>✦</span><h3>Why this option leads</h3></div><div id="explanation" class="explanation"></div></div>
+        <div class="insight-rule"></div><div class="insight-block"><div class="insight-title"><span>◌</span><h3>Stress-test the choice</h3></div><p class="insight-description">What if your priorities shift? Test how often each choice leads across 900 simulated variations.</p><div class="range-label"><label for="volatility">Assumed uncertainty</label><strong id="volatility-value">25%</strong></div><input class="stress-range" id="volatility" type="range" min="0" max="60" step="5" value="25" /><div class="range-ends"><span>Stable</span><span>Uncertain</span></div><div id="stress-results"></div><p class="simulation-note">Heuristic, not a prediction. Results use reproducible random sampling.</p></div>
+        <div class="insight-rule"></div><div class="insight-cta"><div class="cta-icon">✧</div><h3>A clearer decision<br>starts with a question.</h3><p>No account. No black box. Just a better way to weigh what matters.</p><button class="outline-btn" id="new-decision-btn">Start fresh <span>↗</span></button></div>
+      </aside>
+    </div>
+  </div>
+  <dialog id="editor-dialog" aria-labelledby="dialog-title"><form method="dialog" id="editor-form"><div class="modal-head"><span class="eyebrow">YOUR DECISION SPACE</span><button class="close-btn" type="button" id="close-dialog-btn" aria-label="Close">×</button></div><h2 id="dialog-title">Edit option</h2><p class="modal-description" id="dialog-description">Make this decision yours.</p><div id="editor-fields" class="editor-fields"></div><div class="modal-footer"><button type="button" id="delete-entry-btn" class="danger-link" hidden>Delete</button><div class="modal-footer-actions"><button type="button" id="cancel-dialog-btn" class="ghost-light">Cancel</button><button type="submit" id="save-dialog-btn" class="primary-btn">Save changes ↗</button></div></div></form></dialog>
+  <div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>
