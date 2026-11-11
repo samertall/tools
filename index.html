@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#121b30">
+  <meta name="description" content="TaskFlow is a calm, focused space for planning tasks, reviewing progress, and keeping projects moving.">
+  <title>TaskFlow — Clarity for work in motion</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Workspace navigation">
+      <a href="#overview" class="brand" aria-label="TaskFlow home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span>taskflow<span class="brand-dot">.</span></span>
+      </a>
+      <div class="workspace-picker">
+        <span class="workspace-avatar">S</span>
+        <span class="workspace-info"><strong>Samer's workspace</strong><small>Personal space</small></span>
+        <span class="chevron" aria-hidden="true">⌄</span>
+      </div>
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="nav-items">
+        <a class="nav-item active" href="#overview" data-nav="overview"><span class="nav-icon">◫</span> Overview</a>
+        <a class="nav-item" href="#board" data-nav="board"><span class="nav-icon">▦</span> My tasks <span id="nav-task-count" class="nav-count">0</span></a>
+        <a class="nav-item" href="#projects" data-nav="projects"><span class="nav-icon">◈</span> Projects</a>
+      </nav>
+      <div class="nav-heading-row"><p class="nav-label">YOUR PROJECTS</p><span class="sidebar-hint" title="Manage tasks by project">3</span></div>
+      <nav class="nav-items project-nav" aria-label="Projects">
+        <button type="button" class="nav-item project-link" data-project="platform"><span class="project-dot violet"></span> Platform redesign</button>
+        <button type="button" class="nav-item project-link" data-project="website"><span class="project-dot blue"></span> Website launch</button>
+        <button type="button" class="nav-item project-link" data-project="design-system"><span class="project-dot mint"></span> Design system</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="focus-card">
+          <span class="focus-icon" aria-hidden="true">✦</span>
+          <strong>Make progress visible</strong>
+          <p>Small, focused steps turn into meaningful work.</p>
+        </div>
+        <div class="profile"><span class="profile-avatar">ST</span><span><strong>Samer Tallauze</strong><small>Workspace owner</small></span><span class="profile-more">•••</span></div>
+      </div>
+    </aside>
+    <div class="main-column">
+      <header class="topbar">
+        <div class="breadcrumb"><button type="button" id="mobile-nav" class="mobile-nav" aria-label="Toggle navigation" aria-expanded="false">☰</button><span>Workspace</span><span class="crumb-divider">/</span><strong>Overview</strong></div>
+        <div class="topbar-actions">
+          <span class="date-chip" id="current-date">Today</span>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <span class="topbar-user" title="Samer's demo workspace">ST</span>
+        </div>
+      </header>
+      <main id="overview" class="content">
+        <div class="demo-notice" role="note"><span class="notice-spark">✦</span><span><strong>Local-first demo workspace.</strong> Your edits stay in this browser. No account, cloud sync, or payment required.</span><button type="button" id="export-data" class="notice-action">Export my tasks <span aria-hidden="true">↗</span></button></div>
+        <section class="welcome-row" aria-labelledby="page-heading">
+          <div><p class="eyebrow">YOUR WORKSPACE AT A GLANCE</p><h1 id="page-heading">Let's make work <span>flow.</span></h1><p class="lead">Focus on what matters, keep momentum, and see what's moving forward.</p></div>
+          <button id="add-task-primary" type="button" class="primary-button"><span class="button-plus">+</span> New task</button>
+        </section>
+        <section class="stats-grid" aria-label="Task summary">
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon violet-soft">▦</span><span class="stat-tag">ALL TASKS</span></div><strong id="stat-total" class="stat-value">0</strong><p>Across your workspace</p></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon blue-soft">◔</span><span class="stat-tag">IN PROGRESS</span></div><strong id="stat-active" class="stat-value">0</strong><p>Currently moving</p></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon green-soft">✓</span><span class="stat-tag">COMPLETED</span></div><strong id="stat-complete" class="stat-value">0</strong><p>Work you can celebrate</p></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-icon coral-soft">!</span><span class="stat-tag">OVERDUE</span></div><strong id="stat-overdue" class="stat-value">0</strong><p>Worth a closer look</p></article>
+        </section>
+        <section class="momentum-card" aria-label="Completion progress"><div><span class="momentum-kicker">WORKSPACE MOMENTUM</span><h2>One task at a time.</h2><p>Every completed task brings your projects a step closer.</p></div><div class="momentum-side"><div class="progress-heading"><strong id="progress-number">0%</strong><span>complete</span></div><div class="progress-track"><div id="progress-fill" class="progress-fill" style="width:0%"></div></div><small id="progress-description">0 of 0 tasks completed</small></div><div class="momentum-orb" aria-hidden="true"></div></section>
+        <section id="board" class="board-section" aria-labelledby="board-heading">
+          <div class="section-heading"><div><p class="eyebrow">PLAN. DO. COMPLETE.</p><h2 id="board-heading">Your work, organized.</h2><p class="section-subtitle">A clear view of every step, from idea to done.</p></div><div class="board-view-toggle" role="group" aria-label="Task view"><button type="button" id="view-board" class="view-toggle active" aria-pressed="true">▦ <span>Board</span></button><button type="button" id="view-list" class="view-toggle" aria-pressed="false">☰ <span>List</span></button></div></div>
+          <div class="board-toolbar">
+            <div class="search-field"><span aria-hidden="true">⌕</span><label class="sr-only" for="task-search">Search tasks</label><input id="task-search" type="search" placeholder="Search tasks…" autocomplete="off"><kbd>/</kbd></div>
+            <label class="sr-only" for="project-filter">Filter by project</label>
+            <select id="project-filter"><option value="all">All projects</option><option value="platform">Platform redesign</option><option value="website">Website launch</option><option value="design-system">Design system</option></select>
+            <label class="sr-only" for="priority-filter">Filter by priority</label>
+            <select id="priority-filter"><option value="all">All priorities</option><option value="high">High priority</option><option value="medium">Medium priority</option><option value="low">Low priority</option></select>
+            <span id="visible-count" class="visible-count" aria-live="polite">0 tasks</span>
+          </div>
+          <div id="board-content" class="kanban-board" aria-live="polite"></div>
+          <div id="list-content" class="list-panel" hidden></div>
+        </section>
+        <footer class="footer"><span>TaskFlow · Designed for focus, built for clarity.</span><span>Original prototype · Browser-local data</span></footer>
+      </main>
+    </div>
+  </div>
+  <div id="modal-backdrop" class="modal-backdrop" hidden>
+    <section class="task-modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+      <div class="modal-top"><div><p class="eyebrow">KEEP WORK MOVING</p><h2 id="modal-heading">Create a task</h2></div><button type="button" id="close-modal" class="icon-button" aria-label="Close task editor">×</button></div>
+      <form id="task-form">
+        <input id="task-id" name="id" type="hidden">
+        <div class="form-field"><label for="task-title">Task title <span>*</span></label><input id="task-title" name="title" type="text" maxlength="120" required placeholder="What needs to get done?"></div>
+        <div class="form-field"><label for="task-description">Description</label><textarea id="task-description" name="description" rows="3" maxlength="1000" placeholder="Add a little context for your future self…"></textarea></div>
+        <div class="form-grid">
+          <div class="form-field"><label for="task-project">Project</label><select id="task-project" name="project"><option value="platform">Platform redesign</option><option value="website">Website launch</option><option value="design-system">Design system</option></select></div>
+          <div class="form-field"><label for="task-status">Status</label><select id="task-status" name="status"><option value="backlog">Backlog</option><option value="in-progress">In progress</option><option value="review">In review</option><option value="done">Done</option></select></div>
+          <div class="form-field"><label for="task-priority">Priority</label><select id="task-priority" name="priority"><option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option></select></div>
+          <div class="form-field"><label for="task-due">Due date</label><input id="task-due" name="dueDate" type="date"></div>
+          <div class="form-field"><label for="task-assignee">Assignee initials</label><input id="task-assignee" name="assignee" maxlength="3" value="ST" placeholder="ST"></div>
+        </div>
+        <div class="modal-actions"><button id="delete-task" type="button" class="text-danger" hidden>Delete task</button><span class="action-spacer"></span><button id="cancel-task" type="button" class="secondary-button">Cancel</button><button type="submit" class="primary-button">Save task <span aria-hidden="true">↗</span></button></div>
+      </form>
+    </section>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
