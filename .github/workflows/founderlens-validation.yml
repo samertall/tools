@@ -1,0 +1,45 @@
+name: FounderLens real-model browser validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'founderlens-ai/**'
+      - '.github/workflows/founderlens-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    name: Verify free model and human checkpoint
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: founderlens-ai
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit tests
+        run: node --test
+      - name: Install test-only browser tools
+        run: npm install --no-save playwright@1.56.1
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Create evidence folder
+        run: mkdir -p artifacts
+      - name: Real-model end-to-end test
+        run: node scripts/e2e.mjs
+        env:
+          FOUNDERLENS_URL: https://founderlens-ai-hetic-2026.vercel.app
+      - name: Save reproducible screenshots, human-reviewed report, and real-run video
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: founderlens-real-model-proof
+          path: founderlens-ai/artifacts/
+          if-no-files-found: warn
