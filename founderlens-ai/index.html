@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="FounderLens AI — a private, free-model research co-pilot for founders, designed to preserve human judgment.">
+  <title>FounderLens AI — Evidence before decisions</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to main content</a>
+  <header class="topbar"><div class="brand"><span class="mark" aria-hidden="true">◈</span><span>FounderLens <b>AI</b></span></div><div class="header-actions"><span class="release">HETIC 2026 · Open-weight</span><a href="https://github.com/samertall/tools/tree/main/founderlens-ai" target="_blank" rel="noopener noreferrer">Source ↗</a></div></header>
+  <main id="main">
+    <section class="intro"><div><div class="eyebrow"><span class="pulse"></span> HUMAN-FIRST RESEARCH AGENT</div><h1>Better evidence.<br><em>Stronger founder decisions.</em></h1><p class="lede">Transform a startup assumption and your own research notes into a challengeable briefing. The model proposes questions. <strong>You decide what is credible.</strong></p></div><div class="hero-aside"><span class="hero-icon">✦</span><b>No paid AI credits</b><span>Private in-browser inference</span><span>Every action requires human review</span></div></section>
+    <nav class="steps" aria-label="Workflow progress"><div class="step active" data-step="1"><span>01</span> Gather evidence</div><div class="step" data-step="2"><span>02</span> Generate critique</div><div class="step" data-step="3"><span>03</span> Human judgment</div><div class="step" data-step="4"><span>04</span> Export report</div></nav>
+    <div class="layout">
+      <div class="workspace">
+        <section class="panel" aria-labelledby="study-title"><div class="panel-heading"><div><div class="overline">WORKSPACE 01 / INPUTS</div><h2 id="study-title">Define the research question</h2><p>Use a real founder hypothesis and cite only evidence you have permission to use.</p></div><button id="sample" type="button" class="ghost">Load synthetic example</button></div>
+          <div class="fields"><label for="venture">Venture / working title</label><input id="venture" type="text" maxlength="100" placeholder="e.g. Parkwise" autocomplete="off"><label for="assumption">Founder's assumption <span class="required">*</span></label><textarea id="assumption" rows="3" maxlength="800" placeholder="We believe independent cafés will pay for a lightweight loyalty tool because…"></textarea>
+          <div class="cols"><div><label for="customer">Target customer</label><input id="customer" type="text" maxlength="140" placeholder="e.g. Independent coffee shops"></div><div><label for="manual">Estimated manual research time, minutes</label><input id="manual" type="number" min="1" max="1200" value="30" inputmode="numeric"></div></div></div>
+          <div class="evidence-head"><div><h3>Evidence cards</h3><p>Provide excerpts from your own notes or public research. Links are references, not automatically verified.</p></div><button id="add-evidence" type="button" class="ghost">+ Add source</button></div>
+          <div id="evidence-list"></div>
+          <div class="callout"><strong>Privacy by design</strong><p>Input stays in your browser. The model's public weights download from Hugging Face on first use. Do not enter confidential or personal data.</p></div>
+          <div class="actionrow"><button id="run" class="primary" type="button">✦ Generate AI critique <span>→</span></button><span id="status" class="status" role="status" aria-live="polite">Ready for evidence</span></div>
+        </section>
+        <section class="panel hidden" id="results-panel" aria-labelledby="review-title"><div class="panel-heading"><div><div class="overline">WORKSPACE 02 / AI OUTPUT</div><h2 id="review-title">Challenge the assumption</h2><p>This model output is speculative. Source references below come only from the cards you supplied.</p></div><span class="model-badge">ON-DEVICE MODEL</span></div>
+          <div class="result-block"><span class="overline">AI-SUGGESTED CRITIQUE · EDITABLE</span><label class="sr-only" for="critique">Generated critique (editable)</label><textarea id="critique" rows="8" maxlength="6000"></textarea></div>
+          <div class="result-block"><span class="overline">SOURCE LEDGER · USER PROVIDED, UNVERIFIED</span><div id="source-ledger"></div></div>
+          <div class="result-block"><span class="overline">COUNTER-EVIDENCE CHECK</span><ul class="checklist"><li>Is the target audience represented in these sources?</li><li>What evidence would falsify the founder's assumption?</li><li>Are observations being confused with market-size estimates?</li><li>Do any sources contradict each other?</li></ul></div>
+        </section>
+        <section class="panel hidden" id="decision-panel" aria-labelledby="decision-title"><div class="panel-heading"><div><div class="overline">WORKSPACE 03 / MANDATORY HUMAN GATE</div><h2 id="decision-title">The founder has the final say</h2><p>No report is finalized or exported before you make an explicit decision.</p></div><span class="human-badge">HUMAN CHECKPOINT</span></div>
+          <fieldset class="decision-options"><legend>How do you judge the AI draft?</legend><label><input type="radio" name="decision" value="approve"> Approve as an exploratory briefing</label><label><input type="radio" name="decision" value="revise"> Approve with corrections / reservations</label><label><input type="radio" name="decision" value="reject"> Reject — needs more evidence</label></fieldset>
+          <label for="notes">Your reasoning and next validation action <span class="required">*</span></label><textarea id="notes" rows="4" maxlength="2000" placeholder="I question the sample size. Next: interview five café owners and compare their existing loyalty methods."></textarea>
+          <label class="consent"><input type="checkbox" id="ack"> I reviewed the source ledger and understand the AI has not verified market facts or made a decision for me.</label>
+          <div class="actionrow"><button id="export" class="primary" type="button" disabled>Export founder-reviewed report ↓</button><span id="export-status" class="status" role="status" aria-live="polite">Requires your decision and reasoning</span></div>
+        </section>
+      </div>
+      <aside class="sidebar" aria-label="Agent transparency"><div class="side-card"><div class="overline">AGENT STATUS</div><div class="agent"><span class="agent-orb">✳</span><div><b>Research co-pilot</b><small id="engine-status">Idle · model not loaded</small></div></div><div class="hairline"></div><div class="metric"><span>Runtime</span><b>Local browser · free</b></div><div class="metric"><span>AI model</span><b>SmolLM2 135M</b></div><div class="metric"><span>Output</span><b>Review-first</b></div><div class="metric"><span>External actions</span><b>None</b></div></div><div class="side-card"><div class="overline">HOW IT WORKS</div><ol class="side-list"><li><span>01</span> Founder describes a falsifiable hypothesis</li><li><span>02</span> Sources and assumptions are organized</li><li><span>03</span> Free local model generates a critical response</li><li><span>04</span> Human edits, approves or rejects</li><li><span>05</span> Local report download (no backend)</li></ol></div><div class="side-card disclaimer"><div class="overline">EVIDENCE RULES</div><p>Not an autonomous web researcher. It does not browse websites or authenticate citations. Supplied excerpts can be biased or wrong. Treat the AI answer as a draft for human investigation.</p></div></aside>
+    </div>
+  </main>
+  <footer>FounderLens AI · A human-first student project concept for HETIC 2026 · <a href="https://samertall.com" target="_blank" rel="noopener noreferrer">Samer Tallauze</a> · <a href="./docs/architecture.md">Architecture</a></footer>
+</body>
+</html>
