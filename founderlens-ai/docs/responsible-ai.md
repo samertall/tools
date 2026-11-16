@@ -6,6 +6,6 @@
 
 **Limitations:** No browsing or independent link verification. Inference depends on CDN availability, browser WebAssembly memory, CPU and network. Generated questions are suggestions, not investment or legal advice. Reports are human-reviewed drafts, not validated market research.
 
-**Failure cases:** Model download failure, insufficient device resources, empty output, manipulated evidence excerpts, multilingual mistakes and unsupported source attribution. Errors block report creation rather than producing a simulated success.
+**Observed failure in live CI:** The small 135M model repeated prompt text and incorrectly rephrased or misattributed synthetic source excerpts. The generated critique must not be treated as reliable market evidence without user correction. Human check is a required guardrail, not a quality guarantee.\n\n**Failure cases:** Model download failure, insufficient device resources, empty output, manipulated evidence excerpts, multilingual mistakes and unsupported source attribution. Errors block report creation rather than producing a simulated success.
 
 **Accessibility:** Semantic labels, visible keyboard focus, skip navigation, responsive layout, and screen-reader progress updates. A formal cross-browser and assistive-tech audit is still required.
