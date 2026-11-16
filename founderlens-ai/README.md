@@ -2,9 +2,9 @@
 
 A browser-based, source-bound research co-pilot that helps early-stage founders challenge assumptions using an **open-weight, no-cost AI model**, with a **mandatory human judgment checkpoint** before a report can be downloaded.
 
-> Status (Nov 16, 2026): functional source code and unit tests; end-to-end model inference from a public hosted browser and comparative time-saved measurement still require validation. Do not describe the earlier [concept video](https://youtu.be/Y-k95RwgRkc) as a live agent demonstration.
+> Status (Nov 16, 2026): live deployment verified, all seven unit tests and the Chromium browser E2E test passed with a real SmolLM2 inference and mandatory approval/export gate ([test run](https://github.com/samertall/tools/actions/runs/43857140743)). **Observed generation: 18.1 seconds** for this synthetic CI case, including initial load. Source attribution quality was poor in this run: the small model repeated and misattributed excerpts; critique remains unverified and editable. No paired manual-versus-assisted study has established time savings. [Earlier concept video](https://youtu.be/Y-k95RwgRkc) is not a real agent demo.
 
-## Why this matters
+**Live test application:** https://founderlens-ai-hetic-2026.vercel.app\n\n**Recorded verification:** [GitHub Actions: real-model end-to-end test and downloadable video artifact](https://github.com/samertall/tools/actions/runs/43857140743)\n\n## Why this matters
 
 Founders often mistake plausible market observations for validated demand. FounderLens converts user-supplied evidence into structured counter-arguments and discovery questions so they can decide what to investigate. The product does **not** assert that sources were visited or verified, and does not contact customers or submit anything externally.
 
