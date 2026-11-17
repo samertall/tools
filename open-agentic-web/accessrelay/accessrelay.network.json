@@ -1,0 +1,77 @@
+{
+  "metadata": {
+    "description": "AccessRelay: open WCAG remediation agent network",
+    "sample_queries": [
+      "Summarize the accessibility backlog",
+      "How can I fix A11Y-101?",
+      "Resolve A11Y-101"
+    ]
+  },
+  "llm_config": {
+    "model_name": "alibaba/qwen3.8-flash"
+  },
+  "instructions_prefix": "Use only current demo findings; never claim an audit occurred.",
+  "max_execution_seconds": 55,
+  "tools": [
+    {
+      "name": "coordinator",
+      "function": {
+        "description": "Coordinate issue triage, specialist remediation and consent-gated website actions.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "inquiry": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "inquiry"
+          ]
+        }
+      },
+      "instructions": "You are the coordinator for a fictional accessibility remediation board. Use site_read_board for current data. Delegate prioritization to priority_analyst and remediation advice to remediation_expert. Use site_update_status or site_create_finding only when the user explicitly requests the local change. Avoid inventing facts or representing demo findings as a completed audit. Report success only after a site action receipt.",
+      "tools": [
+        "priority_analyst",
+        "remediation_expert"
+      ]
+    },
+    {
+      "name": "priority_analyst",
+      "function": {
+        "description": "Explain severity and remediation order for current WCAG findings.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "inquiry": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "inquiry"
+          ]
+        }
+      },
+      "instructions": "Prioritize given issues by user impact and recorded severity. Explain uncertainty and never claim real users were tested.",
+      "tools": []
+    },
+    {
+      "name": "remediation_expert",
+      "function": {
+        "description": "Recommend WCAG-aligned engineering fixes and practical verification steps.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "inquiry": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "inquiry"
+          ]
+        }
+      },
+      "instructions": "Use only documented issue details; give implementation recommendations and keyboard or assistive technology validation steps. Never claim actual testing.",
+      "tools": []
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "brand": "AccessRelay",
+  "networks": [
+    {
+      "name": "accessrelay",
+      "front_man": "coordinator",
+      "hocon": "./accessrelay.network.json",
+      "description": "Browser-native accessibility issue coordination and remediation."
+    }
+  ],
+  "llm_router": {
+    "base_url": "https://api.otari.ai/api/v1",
+    "byok_router": "https://api.otari.ai/api/v1",
+    "mock": false
+  },
+  "allowed_peers": [],
+  "peer_policy": {
+    "mode": "open",
+    "note": "Consent required before every new origin request."
+  },
+  "linking": {
+    "protocol": "nsdeploy-link/v1",
+    "exports": [
+      {
+        "network": "accessrelay",
+        "front_man": "coordinator",
+        "aliases": [
+          "accessrelay"
+        ],
+        "url": "accessrelay"
+      }
+    ],
+    "imports": [],
+    "link_updates": {
+      "mode": "browser-local"
+    }
+  },
+  "agent_mcp": {
+    "protocol": "nsdeploy-agent-mcp/v1",
+    "network": "accessrelay",
+    "front_man": "coordinator",
+    "available": false,
+    "reason": "No hosted MCP facade on this static site."
+  },
+  "deployment": {
+    "mode": "static",
+    "self_contained_runtime": true,
+    "browser_mock": false,
+    "direct_byok": true,
+    "direct_mcp_requires_cors": true,
+    "public_mcp_facade": false
+  },
+  "actions": {
+    "version": 1,
+    "module": "./app.js",
+    "agentTools": [
+      "read_board",
+      "update_status",
+      "create_finding"
+    ]
+  }
+}
