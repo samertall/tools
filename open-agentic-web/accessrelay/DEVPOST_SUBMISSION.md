@@ -32,6 +32,7 @@ Agent interoperability requires a portable data model and a visible trust bounda
 Add generic browser MCP support, model streaming, automated spec-conformance tests, and a fully tested independent cross-origin peer demonstration. Connect consenting teams to real accessibility audit results and issue trackers, add WCAG mapping and change-verification evidence.
 
 ## Links
+Video (user uploaded; public status and required entrant narration not yet independently verified): https://youtu.be/s0izXAPEM0I
 Live demo: https://accessrelay-open-agentic-web.vercel.app/
 Open-source code: https://github.com/samertall/tools/tree/main/open-agentic-web/accessrelay/
 Manifest: https://accessrelay-open-agentic-web.vercel.app/agent-manifest.json
@@ -54,5 +55,5 @@ IMPORTANT: The hackathon rules require real browser footage and the entrant's ow
 - Test live BYOK against a tool-capable model with CORS and verify action invocation.
 - Test a real independent peer origin and document origin consent and data isolation.
 - Capture 2–4 actual screenshots from the live website.
-- Record and publicly upload a video under two minutes featuring the entrant's own spoken explanation.
+- Verify https://youtu.be/s0izXAPEM0I is public, shorter than 2 minutes, and features the entrant's actual spoken narration. The previously generated silent MP4 is not sufficient.
 - Complete Devpost eligibility and submission fields, attach actual screenshot(s) and YouTube video, and finalize submission before January 11, 2027, 16:00 UTC.
