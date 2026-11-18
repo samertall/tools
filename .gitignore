@@ -1,7 +1,9 @@
-bazel-*
+node_modules/
+.env
+.env.*
+!.env.example
+artifacts/
+cache/
+coverage/
+web/deployment.json
 .DS_Store
-.drone.sec.yml
-.idea/
-debug.test
-*pb.go
-node_modules

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0c1220" />
+  <meta name="description" content="MandatePay: spend-limited, revocable tUSD8 payment mandates for AI agents on Aevum Testnet." />
+  <title>MandatePay — Agent Payments With Boundaries</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="#top" aria-label="MandatePay home"><span class="brand-mark">M<span class="brand-dot">.</span></span><span><b>mandate<span class="brand-light">pay</span></b><small>TRUSTED AGENT PAYMENTS</small></span></a>
+      <div class="side-label">WORKSPACE</div>
+      <nav aria-label="Main navigation" class="nav-links">
+        <a class="active" href="#top"><span class="nav-icon">◈</span> Overview</a>
+        <a href="#fund"><span class="nav-icon">◉</span> Vault & deposits</a>
+        <a href="#payee"><span class="nav-icon">◎</span> Merchant access</a>
+        <a href="#mandate"><span class="nav-icon">◷</span> Agent mandate</a>
+        <a href="#settle"><span class="nav-icon">↗</span> Execute payment</a>
+      </nav>
+      <div class="side-bottom">
+        <div class="side-security"><span class="security-icon">✳</span><div><b>Zero blind spending.</b><p>Every transaction enforced by Solidity, not AI prompts.</p></div></div>
+        <div class="side-foot">BUILD #01 <span>·</span> QDAY AEVUM</div>
+      </div>
+    </aside>
+    <main id="top" class="main">
+      <div class="topbar">
+        <span class="breadcrumb">Workspace <span>/</span> <b>Control room</b></span>
+        <div class="top-actions"><span class="network"><span class="live-dot"></span> Aevum Testnet · 44005</span><button class="connect-btn" id="connectBtn">Connect wallet <span>↗</span></button></div>
+      </div>
+      <section class="welcome">
+        <div class="welcome-content"><div class="eyebrow"><span class="flare">✦</span> CONTROL WITHOUT COMPROMISE</div><h1>Give agents a budget.<br><em>Not a blank check.</em></h1><p>Programmable tUSD8 payments on QDay Aevum. Humans define the mandate. Smart contracts enforce every boundary.</p><div class="hero-links"><a class="primary-link" href="#fund">Configure a payment <span>↗</span></a><a class="ghost-link" href="https://explorer-test.qday.info" target="_blank" rel="noopener noreferrer">Open explorer ↗</a></div></div>
+        <div class="shield-figure" aria-hidden="true"><span class="halo h1"></span><span class="halo h2"></span><span class="halo h3"></span><div class="core-shield"><div class="shield-inner">✓</div></div><div class="floating float-a"><span>↘</span> BUDGET LOCKED</div><div class="floating float-b"><span>✳</span> POLICY ACTIVE</div></div>
+      </section>
+      <section class="overview" aria-label="Live vault overview">
+        <div class="section-top"><div><div class="mini-kicker">YOUR WORKSPACE</div><h2>Live overview</h2></div><button class="secondary" id="refreshBtn">↻ Refresh balances</button></div>
+        <div class="metrics">
+          <article class="metric"><div class="metric-label">Vault balance <span>◈</span></div><div class="metric-number" id="vaultAmount">—</div><div class="metric-meta">tUSD8 <span>· Test funds</span></div></article>
+          <article class="metric"><div class="metric-label">Authorized spend <span>↗</span></div><div class="metric-number" id="spentAmount">—</div><div class="metric-meta">tUSD8 <span>· Lifetime mandate</span></div></article>
+          <article class="metric"><div class="metric-label">Total agent budget <span>⌗</span></div><div class="metric-number" id="budgetAmount">—</div><div class="metric-meta">tUSD8 <span>· Hard limit</span></div></article>
+          <article class="metric"><div class="metric-label">Agent permission <span>◇</span></div><div class="metric-status" id="mandateStatus">Not connected</div><div class="metric-meta" id="mandateExpiry">Connect to inspect</div></article>
+        </div>
+      </section>
+      <section class="setup-note" id="setupNotice" role="status"><span class="notice-icon">!</span><div><b>Set your deployed contract address</b><p>Enter a verified Aevum MandatePay address to activate transactions. Deploy the contract from the repository first; this preview does not simulate or fabricate chain activity.</p><div class="address-row"><label for="contractAddress" class="sr-only">Deployed MandatePay contract address</label><input id="contractAddress" placeholder="0x… contract address" autocomplete="off" spellcheck="false" /><button id="useAddressBtn" class="secondary">Use address</button></div><span id="contractInfo" class="helper"></span></div></section>
+      <div class="content-grid">
+        <div class="left-stack">
+          <section class="panel" id="fund"><div class="panel-heading"><div class="step">01</div><div><h3>Fund your payment vault</h3><p>Deposit test tUSD8 into the non-custodial contract.</p></div></div>
+            <form id="depositForm"><div class="field"><label for="depositAmount">Amount to deposit <span>tUSD8</span></label><input type="number" min="0.000001" step="0.000001" id="depositAmount" placeholder="e.g. 25.00" required /></div><button class="action" type="submit">Approve & deposit <span>↗</span></button></form>
+            <div class="divider-line"></div><form id="withdrawForm" class="compact-form"><div class="field"><label for="withdrawAmount">Recover unspent funds <span>tUSD8</span></label><input type="number" min="0.000001" step="0.000001" id="withdrawAmount" placeholder="Amount to withdraw" required /></div><button class="secondary" type="submit">Withdraw</button></form>
+            <p class="form-help">You retain the right to withdraw unspent test tokens at any time.</p>
+          </section>
+          <section class="panel" id="payee"><div class="panel-heading"><div class="step">02</div><div><h3>Allow a trusted merchant</h3><p>Only explicitly approved addresses can receive agent payments.</p></div></div>
+            <form id="payeeForm"><div class="field"><label for="payeeAddress">Merchant wallet address</label><input id="payeeAddress" placeholder="0x…" autocomplete="off" spellcheck="false" required /></div><div class="form-buttons"><button class="action" type="submit">Approve merchant <span>↗</span></button><button class="secondary" type="button" id="removePayeeBtn">Remove access</button></div></form>
+            <p class="form-help">The payee allowlist is stored publicly on Aevum; avoid entering confidential information.</p>
+          </section>
+        </div>
+        <div class="right-stack">
+          <section class="panel primary-panel" id="mandate"><div class="panel-heading"><div class="step step-purple">03</div><div><h3>Design the agent mandate</h3><p>Least privilege, bounded time, and revocable authority.</p></div></div>
+            <form id="mandateForm"><div class="field"><label for="agentAddress">Authorized agent wallet</label><input id="agentAddress" placeholder="0x… Agent EOA" autocomplete="off" spellcheck="false" required /></div>
+              <div class="form-two"><div class="field"><label for="maxAmount">Per-payment max <span>tUSD8</span></label><input id="maxAmount" type="number" min="0.000001" step="0.000001" value="5" required /></div><div class="field"><label for="dailyAmount">Daily allowance <span>tUSD8</span></label><input id="dailyAmount" type="number" min="0.000001" step="0.000001" value="15" required /></div></div>
+              <div class="form-two"><div class="field"><label for="budgetTotal">Total budget <span>tUSD8</span></label><input id="budgetTotal" type="number" min="0.000001" step="0.000001" value="30" required /></div><div class="field"><label for="expiresHours">Expiry after <span>hours</span></label><input id="expiresHours" type="number" min="1" max="8760" step="1" value="24" required /></div></div>
+              <div class="policy-check"><span>✓</span><div><b>Enforced at execution</b><small>Expired, repeated, or out-of-policy payments revert on-chain.</small></div></div>
+              <button class="action" type="submit">Activate mandate <span>↗</span></button>
+            </form><button class="danger" id="revokeBtn">⊘ Revoke agent immediately</button>
+          </section>
+          <section class="panel" id="settle"><div class="panel-heading"><div class="step">04</div><div><h3>Run an agent payment</h3><p>Switch to the authorized agent wallet to sign a transaction.</p></div></div>
+            <form id="payForm"><div class="field"><label for="ownerAddress">Vault owner address</label><input id="ownerAddress" placeholder="0x… owner" autocomplete="off" spellcheck="false" required /></div><div class="field"><label for="paymentPayee">Approved merchant address</label><input id="paymentPayee" placeholder="0x… merchant" autocomplete="off" spellcheck="false" required /></div><div class="form-two"><div class="field"><label for="paymentAmount">Amount <span>tUSD8</span></label><input id="paymentAmount" type="number" min="0.000001" step="0.000001" placeholder="3.00" required /></div><div class="field"><label for="invoiceId">Unique invoice reference</label><input id="invoiceId" placeholder="INV-0001" maxlength="80" required /></div></div>
+              <div id="policyResult" class="policy-result" aria-live="polite"><span class="policy-orb">◇</span> Run a preflight check before paying.</div>
+              <div class="form-buttons"><button type="button" class="secondary" id="preflightBtn">Check policy</button><button class="action" type="submit">Execute payment <span>↗</span></button></div>
+            </form>
+          </section>
+        </div>
+      </div>
+      <section class="activity panel"><div class="section-top"><div><div class="mini-kicker">ON-CHAIN AUDITABILITY</div><h2>Transaction proofs</h2></div><span class="subtle">Recent confirmations in this browser session</span></div><div id="activityList" class="activity-list" aria-live="polite"><div class="empty-state"><span>◎</span>No confirmed transactions in this session. Complete a payment to see its explorer proof.</div></div></section>
+      <footer><div><b>mandatepay.</b> An open-source QDay Aevum builder prototype.</div><div><a href="https://qday.io/official-links" target="_blank" rel="noopener noreferrer">Official QDay links ↗</a> <span>·</span> Testnet only · No real-world value</div></footer>
+    </main>
+  </div>
+  <div role="status" aria-live="polite" id="toast" class="toast" hidden></div>
+</body>
+</html>

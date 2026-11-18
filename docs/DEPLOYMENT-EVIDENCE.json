@@ -1,0 +1,12 @@
+{
+  "chainId": 44005,
+  "network": "QDay Aevum Testnet",
+  "tokenAddress": "0x456569838f1d43009A91ebA4263147Afd7233483",
+  "contractAddress": null,
+  "contractDeploymentHash": null,
+  "verifiedSourceUrl": null,
+  "fundingTxHash": null,
+  "agentSettlementTxHash": null,
+  "revocationTxHash": null,
+  "notes": "No transaction proof has been generated. Never invent onchain proof."
+}

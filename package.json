@@ -1,21 +1,24 @@
 {
-  "name": "codelab-elements",
-  "version": "1.0.1",
-  "description": "Custom elements for codelabs",
-  "main": "index.js",
+  "name": "mandatepay-aevum",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Revocable on-chain scoped stablecoin mandates for Aevum's tUSD8",
   "scripts": {
-    "clean": "node_modules/.bin/bazel clean",
-    "build": "node_modules/.bin/bazel build npm_dist",
-    "test": "node_modules/.bin/bazel test --test_output=all codelab-elements/demo:hello_test",
-    "pub": "npm run clean && npm run build && cd bazel-genfiles && unzip npm_dist.zip -d npm_dist && npm publish npm_dist"
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:aevum": "hardhat run scripts/deploy.cjs --network aevum",
+    "serve": "npx serve web -l 4173",
+    "check:js": "node --check web/app.js && node --check web/abi.js && node --check scripts/deploy.cjs"
   },
-  "author": "Google",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/googlecodelabs/tools.git"
-  },
-  "license": "Apache-2.0",
   "devDependencies": {
-    "@bazel/bazel": "^0.18.1"
+    "@nomicfoundation/hardhat-ethers": "3.0.8",
+    "@nomicfoundation/hardhat-chai-matchers": "2.0.8",
+    "chai": "4.5.0",
+    "dotenv": "16.4.5",
+    "ethers": "6.13.4",
+    "hardhat": "2.22.18",
+    "serve": "14.2.4",
+    "solc": "0.8.24"
   }
 }

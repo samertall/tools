@@ -1,188 +1,173 @@
-# Tools for authoring and serving codelabs
+# MandatePay
 
-[![Demo](https://storage.googleapis.com/claat/demo.png)](https://storage.googleapis.com/claat/demo.mp4)
+**Give agents a budget. Not a blank check.**
 
-Codelabs are interactive instructional tutorials, which can be authored in Google Docs
-using some simple formatting conventions. You can also author codelabs using markdown syntax.
-This repo contains all the tools and documentation you’ll need for building and publishing
-your own codelabs.
+![Chain](https://img.shields.io/badge/QDay%20Aevum-44005-8d78e8) ![tUSD8](https://img.shields.io/badge/Stablecoin-tUSD8%20(test)-45d7a6) ![License](https://img.shields.io/badge/License-MIT-blue)
 
-If you're interested in authoring codelabs, create a doc following the [Codelab Formatting Guide](FORMAT-GUIDE.md). 
-and see the [claat](claat) directory for a detailed description of the `claat` command line tool.
+MandatePay is an open-source, self-custodial prototype for **stablecoin payments initiated by agents under human-defined on-chain limits**. Built **November 18, 2026** for [Aevum Builder Challenge #1](https://dorahacks.io/hackathon/qday/detail), using QDay's official Aevum testnet and already-deployed tUSD8 token.
 
-Also, consider joining the [codelab-authors Google Group](https://groups.google.com/forum/#!forum/codelab-authors),
-which connects you with other authors and provides updates on new releases. 
+**Status:** full source and UI scaffold provided; deployment address, verified explorer source, and live confirmation hashes must be filled in after deploying. Do **not** claim production readiness or testnet deployment without evidence.
 
-## What is this?
+## Problem and differentiated approach
 
-For the past 3+ years, the CLaaT (Codelabs as a Thing) project has given developers around the
-world a hands-on experience with Google products and tools.  We’ve accumulated over 500 high quality
-codelabs, served millions of web visitors, and supported over 100 events, from local meetups
-all the way up to Google I/O.
+Autonomous agents can already request payment, but relying on natural-language instructions ("don't spend too much") is not a security boundary. MandatePay turns each human authorization into an enforceable, revocable contract policy. The operating model is deliberately narrow: **one owner, one active agent mandate, an explicit merchant allowlist, bounded spend, unique invoice IDs**, and observable tUSD8 settlements.
 
-This project has been implemented as a volunteer project by a small group of dedicated Googlers
-who care deeply about this kind of “learning by doing” approach to education.
+It is useful for API purchasing, outsourced compute, subscription fulfillment, automated merchant payouts, and invoice settlement. A service provider gets a real on-chain receipt, while the owner can revoke access without changing keys or asking the agent to stop.
 
-## What's special about this tool?
+## What it does
 
-* Powerful and flexible authoring flow via Google Docs
-* Optional support for authoring in Markdown text
-* Ability to produce interactive web or markdown tutorials without writing any code
-* Easy interactive previewing
-* Usage monitoring via Google Analytics
-* Support for multiple target environments (kiosk, web, markdown, offline, etc.)
-* Support for anonymous use - ideal for public computers at developer events
-* Looks great, with a responsive web implementation
-* Remembers where the student left off when returning to a codelab
-* Mobile friendly user experience
+- Owner deposits official **6-decimal test tUSD8** using `approve` + `deposit`.
+- Owner permits/revokes particular merchant addresses.
+- Owner creates a **time-limited, scoped mandate** for a dedicated agent EOA.
+- Agent checks the policy (`checkPayment`) before attempting to settle a unique invoice.
+- Contract checks authorized agent, expiry, approved merchant, max single payment, UTC-day cap, lifetime budget, vault balance and invoice replay.
+- Contract transfers actual tUSD8 to approved merchant, updates owner vault accounting, and emits `InvoiceSettled` with agent + invoice proof.
+- Owner can revoke instantly and withdraw unspent funds. No back-end ever receives a private key.
 
-## Can I use this to create my own codelabs and serve my own codelabs online?
+**Design choice:** scoped, delegated EOAs rather than claiming this proof-of-concept integrates QDay's ERC-4337 bundler or ERC-8004 identity registry. Those are follow-on integrations until endpoints and deployed addresses are independently verified.
 
-Yes, the claat tool and the serving mechanism can be used by anyone to author their
-own codelabs and to serve up their own codelabs on the web.
+## Architecture
 
-You can also use this tool to create a nice looking summary page like the one you see on the official [Google Codelabs site](https://g.co/codelabs).
+```mermaid
+flowchart LR
+  H[Human / merchant owner] -->|Configure payee + caps| V[MandatePay smart contract]
+  H -->|Approve / deposit tUSD8| T[Official tUSD8 ERC-20]
+  T -->|Funds| V
+  A[Delegated agent wallet] -->|Preflight + pay invoice| V
+  V -->|Check every mandate guardrail| V
+  V -->|tUSD8 transfer| P[Approved merchant]
+  V -->|InvoiceSettled event| X[Aevum explorer / auditor]
+  H -->|Instant revoke or withdraw| V
+```
 
-If you're interested in authoring codelabs, join [codelab-authors group](https://groups.google.com/forum/#!forum/codelab-authors),
-which connects you with other authors and provides access to the
-[Codelab Formatting Guide](FORMAT-GUIDE.md).
+### Real network constants
 
-## Ok, how do I use it?
+| Setting | Value |
+|---|---|
+| Network | QDay Aevum Testnet |
+| Chain ID | `44005` (`0xABE5`) |
+| RPC | `https://rpc-test.qday.info` |
+| Explorer | `https://explorer-test.qday.info` |
+| Faucet | `https://faucet.qday.info/en` |
+| Native test gas | `tQDAY`, 18 decimals |
+| Official ERC-20 | `tUSD8`, 6 decimals |
+| Token contract | `0x456569838f1d43009A91ebA4263147Afd7233483` |
+| MandatePay contract | **Not deployed / supply address** |
 
-Check out this [excellent tutorial](https://medium.com/@zarinlo/publish-technical-tutorials-in-google-codelab-format-b07ef76972cd).
+Source: https://qday.io/official-links and https://qday.io/build (last checked 2026-11-18).
 
-1. Create a doc following the syntax conventions described in the [Codelab Formatting Guide](FORMAT-GUIDE.md). Here’s an [example doc](https://docs.google.com/document/d/1E6XMcdTexh5O8JwGy42SY3Ehzi8gOfUGiqTiUX6N04o/). Feel free to copy that doc as a starter template. Once you have your own source doc, note its DocId, which is the long string near the end of the URL (right after docs.google.com/document/d/).
+## Quick start
 
-1. Make one or more changes and preview your codelab, using the preview app provided by Google. To preview a codelab, install the [Preview Codelab Chrome extension](https://chrome.google.com/webstore/detail/preview-codelab/lhojjnijnkiglhkggagbapfonpdlinji) in your browser. Now you can preview a codelab directly from the Google Doc view by clicking the Chrome extension’s button, which will open a new tab to display the preview. Alternatively, navigate manually to https://codelabs-preview.appspot.com/?file_id=<google-doc-id>
+Requires Node.js 20+ and an EIP-1193 browser wallet such as MetaMask. All usage is on testnet; do not use real money or an important mainnet wallet.
 
-1. Install the claat command -- see the [README in the claat directory](https://github.com/googlecodelabs/tools/blob/master/claat/README.md) of this repo for instructions..
+```bash
+npm install
+npm run compile
+npm test
+```
 
-1. Run the claat command to transform the doc contents into one of the supported output formats. The default supported formats are html and markdown but the claat tool supports adding additional formats by specifying a path to a Go template. For example, using the example document above:
+### Deploy on Aevum
 
-        $ claat export 1rpHleSSeY-MJZ8JvncvYA8CFqlnlcrW8-a4uEaqizPY  
-        ok      your-first-pwapp
+1. Add the [official Aevum chain](https://qday.io/build) to your wallet, obtain **tQDAY gas** and **tUSD8** from the [official faucet](https://faucet.qday.info/en). Use a fresh disposable wallet.
+2. Copy `.env.example` to `.env` and set `DEPLOYER_PRIVATE_KEY` **only locally**. This value is for Hardhat's deployer and must never go into the web app, repository, screenshots or chat.
+3. Compile and deploy:
 
-    You can also specify a markdown document (.md file) as input. It has to adhere to the syntax conventions described [here](https://github.com/googlecodelabs/tools/tree/master/claat/parser/md)
+```bash
+npm run compile
+npm run deploy:aevum
+```
 
-        $ claat export document.md
-        ok      your-md-based-codelab
+4. The script rejects a wrong chain or a nonexistent tUSD8 contract and writes `web/deployment.json` locally with the contract address and deploy transaction. Put that deployed address into `web/config.js` (`contractAddress`) for a default web configuration, or paste it into the live UI. For a public static hosting deploy, manually commit the **address only**, never wallet secrets.
+5. Inspect the explorer transaction and independently verify the exact source and compiler settings on the QDay explorer if supported. Keep links to verified source and transaction receipts in your DoraHacks entry. Source-code publication in GitHub is **not** equivalent to explorer verification.
 
-1. Run the claat serve command.
+### Run the UI
 
-        $ claat serve
+```bash
+npm run serve
+```
 
-This will start a local web server and open a browser tab to the local server. Click on the
-hyperlink represent your codelab of interest to experience a fully rendered version.
+Open `http://localhost:4173`. The UI is a responsive, no-build static app. It imports the official Ethers v6 browser bundle from jsDelivr, so the browser needs internet. Host the `/web` folder on Vercel, Netlify, or any static server (`web/vercel.json` supplied).
 
-## How do I generate my own landing page?
+### Reproduce a full end-to-end demo
 
-See instructions in the [site directory's readme](site/README.md).
+Use **three separate disposable test wallets**: Owner, Agent, Merchant.
 
-## How do I generate a custom view?
+1. Owner connects MetaMask on chain `44005`, pastes the deployed contract address, and sees it **validated against official tUSD8**.
+2. Owner gets faucet tUSD8, approves and deposits `25.000000` into MandatePay. Confirm the deposit on the explorer.
+3. Owner allowlists Merchant address.
+4. Owner creates a mandate for Agent: **max 5 tUSD8/payment**, **daily 15 tUSD8**, **total 25 tUSD8**, **expires after 24 hours**.
+5. Agent switches wallet account and reconnects. Enter Owner address, Merchant address, amount `3`, invoice `INV-001`.
+6. Click **Check policy**. A result of `0` means the current state permits this exact payment.
+7. Click **Execute payment** and sign with Agent. Observe `InvoiceSettled` and the merchant's actual tUSD8 balance increase.
+8. Try `INV-001` again and observe code **10** (replay). Try `6` tUSD8 and observe code **6** (per-payment cap).
+9. Switch to Owner; click **Revoke agent immediately**. Switch back to Agent and check a new invoice: code **1** (no active mandate).
+10. Owner withdraws unused tUSD8. Show explorer links and validated state for the judges.
 
-Copy the [sample view](site/app/views/vslive), customize it to your liking,
-tag and rebuild the codelabs you want included, and then generate your view.
+Each transaction will cost a small amount of **test tQDAY** gas and requires normal wallet approval. The preflight query does not reserve capacity; transactions can become invalid before inclusion. Contract enforcement is authoritative.
 
-## How do I publish my codelabs?
+## Contract API
 
-The output generated by `claat` is a purely static set of HTML or Markdown code. As such,
-it can be served by any web serving mechanism, including any of the following options:
+| Function | Who may call | Description |
+|---|---|---|
+| `deposit(uint256 amount)` | Owner | Pull exact tUSD8 after ERC-20 approval |
+| `withdraw(uint256 amount)` | Owner | Recover **only that owner's** unspent vault balance |
+| `setPayee(address payee,bool approved)` | Owner | Add/remove a merchant |
+| `setMandate(agent,maxPerPayment,dailyLimit,totalBudget,expiresAt)` | Owner | Replace mandate with new scope, reset counters |
+| `revokeMandate()` | Owner | Immediately disable agent permission |
+| `checkPayment(owner,agent,payee,amount,invoiceId)` | Anyone | Read-only reason code (`0` = eligible) |
+| `pay(owner,payee,amount,invoiceId)` | Authorized agent | Validate policy then transfer tUSD8 to payee |
+| `vaultBalances(owner)` | Anyone | Read owner vault balance |
+| `mandates(owner)` | Anyone | Read active agent and limits |
+| `paidInvoices(owner,invoiceId)` | Anyone | Read invoice deduplication state |
 
-* Github Pages (`*.github.io`)
-* [Google App Engine](https://cloud.google.com/appengine)
-* [Firebase Static Serving](https://firebase.google.com/products/hosting)
-* [Google Cloud Storage](https://cloud.google.com/storage)
-* Amazon Web Services S3
-* Netlify
-* Any open source web server (Nginx, Apache)
-* `python -m SimpleHTTPServer` (Python 2)
-* `python3 -m http.server` (Python 3)
+`amount` values are **uint256 base units** (`1 tUSD8 = 1_000_000`); `expiresAt` is Unix epoch seconds; `invoiceId` is `keccak256(utf8(reference))`. All amounts are exact integers; no float math in the contract. Invoice references are visible if voluntarily disclosed off-chain. Do not use confidential invoice titles.
 
-Simply commit the artifacts generated by the claat command into your preferred serving vehicle
-and you should be ready to go.
+### `checkPayment` return codes
 
-The [site directory](site) contains tools for building your own custom landing page(s) and publishing both landing
-pages and codelabs to Google Cloud Storage.
+`0` eligible; `1` inactive; `2` wrong agent; `3` expired; `4` payee not approved; `5` invalid amount/invoice; `6` per-tx cap; `7` daily cap; `8` total budget; `9` insufficient vault balance; `10` invoice already paid. Daily cap resets at **00:00 UTC** (block timestamp / 86400).
 
-## Why bother with this approach when I can write tutorials directly in Markdown?
+## Safety, trust and constraints
 
-Some people like the Google Docs authoring flow, others prefer to specify their codelabs
-directly in Markdown. Using the Docs approach, one source format can be used to generate
-numerous output formats. Also, you can use a doc for the initial formulation stage, where
-WYSIWYG and easy collaboration are extremely useful. Once the content stabilizes, typically
-after the first launch, you are free to make the generated markdown your source of truth
-and discard the Google Doc as a controlling source. This is desirable because it gives you
-the ability to manage the content as code in a source control system, but it comes at the
-cost of having to commit to one specific output format, or having to maintain multiple
-sources of truth.
+- Contract **only** accepts the official tUSD8 address at deployment; the deploy script checks on-chain code and chain ID.
+- Testnet contract does not request a seed phrase or private key in the UI. Only your browser wallet signs transactions.
+- Checks + state writes happen inside a `nonReentrant` function before any ERC-20 transfer; ERC-20 calls check success and token return value.
+- Owner-specific vault accounting isolates users; each invoice ID is one-time **per owner**.
+- The owner may replace a mandate. This deliberately resets usage counters and is an explicit owner action; spent funds are never restored.
+- An agent can still spend up to its remaining approved budget until revoked. Revoke immediately if an agent key is compromised.
+- The project does not implement compliance screening, multisig, recovery, ERC-4337 smart accounts, ERC-8004 identities, or a production-grade audit. Treat all present implementations as **hackathon-only prototypes**.
+- Third-party dependency versions are pinned. Security, dependency, and smart-contract audits are required for production.
+- This product does **not** implement post-quantum signing cryptography. It uses QDay's EVM-compatible testnet as the settlement chain, with a roadmap toward PQ infrastructure.
 
-This tool and corresponding authoring approach are agnostic with respect to whether (and when)
-you choose to manage your source as a Google Doc or as Markdown text checked into a repo.
-The only hard and fast rule is that, at any one point in time, you should choose one or the
-other. Trying to simultaneously maintain a doc and a corresponding repository is a recipe
-for disaster.
+## Tests and reproducibility
 
-## What are the supported input formats?
+`test/MandatePay.cjs` exercises escrow isolation, payment settlement, unique invoice enforcement, wrong signer, unapproved payee, per-payment limits, daily budget, lifetime caps, expiry, revocation, invalid inputs and insufficient vault balance. GitHub Actions runs syntax check + Solidity compile + test suite on pushes and PRs. **Test results must not be claimed as passing until CI or local tooling actually runs them.**
 
-* Google Docs (following FORMAT-GUIDE.md formatting conventions)
-* Markdown
+## Deployment / submission evidence checklist
 
-## What are the supported output formats?
+- [ ] Public MIT-licensed GitHub repository created and pushed
+- [ ] `npm test` passes with green CI
+- [ ] Aevum deployment confirmed (`44005`)
+- [ ] Contract source verified on explorer
+- [ ] Web UI hosted and checked with real wallet
+- [ ] Deposit and merchant allowlist transactions captured
+- [ ] Agent payment transaction captured
+- [ ] Double-pay/over-cap/revocation demonstrated
+- [ ] 3–5-minute live finalist presentation rehearsed
+- [ ] DoraHacks entry submitted before **2026-12-11 08:00 UTC** (**11:00 Amman time**)
 
-* Google Codelabs - HTML and Markdown
-* Qwiklabs - Markdown
-* Cloud Shell Tutorials - Markdown with special directives
-* Jupyter, Kaggle Kernels, Colaboratory, et. al. - Markdown with format specific cells
+## Business opportunity
 
-There’s no one “best” publication format. Each format has its own advantages,
-disadvantages, community, and application domain. For example, Jupyter has a very strong
-following in the data science and Python communities.
+Start as a developer-friendly SDK and policy dashboard for agent-to-merchant payments, API metering, B2B procurement bots and service settlement. Open-source vault core; commercial hosted monitoring, hosted compliance integrations, multi-approver policies and enterprise audit connectors could be paid layers. Go-to-market: publish the repository and starter templates, partner with API sellers and QDay ecosystem dApps, then pilot controlled agent procurement workflows. This is a **hypothesis**, not a proven revenue or user-demand claim.
 
-This variety of formats is healthy because we’re seeing new innovative approaches all the
-time (for example, see observablehq.com, which recently launched their Beta release).
+## Roadmap
 
-While this evolving format ecosystem is generally a good thing, having to maintain tutorials in
-multiple formats, or switch from one format to another can be painful. The Codelabs doc format
-(as specified in FORMAT-GUIDE.md) can provide a high level specification for maintaining
-a single source of truth, programmatically translated into one or more tutorial specific formats.
+1. MVP: single-agent mandate, invoice replay prevention, direct tUSD8 settlement (**this repository**).
+2. Harden: multiple concurrent mandates, rate limits, signed merchant invoices, event indexer, optional dual approvals, formal invariant tests.
+3. Integrate QDay official smart accounts / session-key SDK and ERC-8004 **after verifying public interface and deployed endpoints**.
+4. Prepare mainnet deployment only after review, audit, operational reliability and regulatory analysis.
 
-## Can I contribute?
+## Open source / credits
 
-Yes, by all means. Have feature ideas? Send us a pull request or file a bug.
+Copyright © 2026 Samer Tallauze. MIT licensed.
 
-## Where did this come from?
-
-For several years, Googlers would rush to build new tutorials and related assets for our
-annual developer event, Google I/O. But every year the authoring platform and distribution
-mechanism changed. As a result, there was little reuse of content and serving infrastructure,
-And every year we essentially kept reinventing the same wheel.
-
-For Google I/O 2014, Shawn Simister wrote a Python program which retrieved
-specially formatted documents from Google Drive, parsed them, and generated
-a nice interactive web-based user experience. This allowed authors to design their
-codelabs using Google Docs, with its great interactivity and collaboration features,
-and automatically convert those documents into beautiful web based tutorials,
-without needing to write a single line of code.
-
-Later, Ewa Gasperowicz wrote a site generator, supporting the ability to
-publish custom landing pages, with associated branding and an inventory of codelabs
-specially curated for a given event.
-
-Alex Vaghin later rewrote Shawn's Python program as a statically linked Go program (the claat command in this repo), eliminating many runtime dependencies, improving translation
-performance. Alex also added, among many other enhancements, a proper abstract syntax
-tree (to facilitate translation to different output formats), an app engine based previewer, an extensible rendering engine, support for generating markdown output. Alex also wrote the web serving infrastructure, the build tooling (based on gulp), and, with the author, the ability to self-publish codelabs directly from the preview app.
-
-Clare Bayley has been the guru of onsite codelab experiences, running events large and small, while Sam Thorogood and Chris Broadfoot made major contributions to the onsite kiosks you may have seen at Google I/O.
-
-Eric Bidelman redesigned the codelab user interface using Polymer components and built the g.co/codelabs landing page, to provide a beautiful user experience that looks great and works equally well on desktop and mobile devices.
-
-Lots of other contributions have been made over the years and I’m sure that I’m neglecting some important advances but for the sake of brevity, I’ll leave it at that.
-
-## Acknowledgements
-
-Google Codelabs exists thanks to the talents and efforts of many fine volunteers, including:
-Alex Vaghin, Marc Cohen, Shawn Simister, Ewa Gasperowicz, Eric Bidelman, Robert Kubis, Clare Bayley, Cassie Recher, Chris Broadfoot, Sam Thorogood, Ryan Seys, and the many codelab authors, inside and outside of Google, who have generated a veritable [treasure trove of content](https://g.co/codelabs).
-
-## Notes
-
-This is not an official Google product.
+Third-party runtime: [ethers.js](https://github.com/ethers-io/ethers.js) (MIT). Development: [Hardhat](https://github.com/NomicFoundation/hardhat) (MIT), [Hardhat Ethers](https://github.com/NomicFoundation/hardhat/tree/main/packages/hardhat-ethers) (MIT), [Hardhat Chai Matchers](https://github.com/NomicFoundation/hardhat/tree/main/packages/hardhat-chai-matchers) (MIT), [Chai](https://www.chaijs.com/) (MIT), [dotenv](https://github.com/motdotla/dotenv) (BSD-2-Clause) and [serve](https://github.com/vercel/serve) (MIT). Google Fonts (DM Sans/Manrope) use SIL Open Font License. No pre-existing copyrighted code was copied into the project.
