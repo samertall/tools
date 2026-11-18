@@ -6,7 +6,7 @@
 
 MandatePay is an open-source, self-custodial prototype for **stablecoin payments initiated by agents under human-defined on-chain limits**. Built **November 18, 2026** for [Aevum Builder Challenge #1](https://dorahacks.io/hackathon/qday/detail), using QDay's official Aevum testnet and already-deployed tUSD8 token.
 
-**Status:** full source and UI scaffold provided; deployment address, verified explorer source, and live confirmation hashes must be filled in after deploying. Do **not** claim production readiness or testnet deployment without evidence.
+**Status (18 Nov 2026):** [Public source](https://github.com/samertall/tools/tree/mandatepay-aevum-2026) published on a dedicated branch; [GitHub CI](https://github.com/samertall/tools/actions/runs/44312392695) passed Solidity compilation and automated tests; [responsive frontend](https://mandatepay-aevum.vercel.app) deployed. **Aevum contract deployment, on-chain settlement evidence, explorer source verification, and DoraHacks submission are NOT complete.** Do not claim production readiness or testnet deployment without evidence. [Final steps](docs/FINAL-STEPS.md).
 
 ## Problem and differentiated approach
 
@@ -144,8 +144,8 @@ Each transaction will cost a small amount of **test tQDAY** gas and requires nor
 
 ## Deployment / submission evidence checklist
 
-- [ ] Public MIT-licensed GitHub repository created and pushed
-- [ ] `npm test` passes with green CI
+- [x] Public MIT-licensed source branch published in an existing public GitHub repository
+- [x] `npm test` passes with green GitHub Actions CI
 - [ ] Aevum deployment confirmed (`44005`)
 - [ ] Contract source verified on explorer
 - [ ] Web UI hosted and checked with real wallet
