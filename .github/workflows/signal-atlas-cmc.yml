@@ -27,6 +27,28 @@ jobs:
         env:
           SIGNAL_ATLAS_URL: https://signal-atlas-cmc-2026.vercel.app
         run: python3 scripts/capture_live_evidence.py
+      - name: Install browser automation tools
+        run: |
+          npm install --no-save playwright
+          npx playwright install chromium
+      - name: Capture true production browser demo
+        id: demo
+        continue-on-error: true
+        env:
+          SIGNAL_ATLAS_URL: https://signal-atlas-cmc-2026.vercel.app
+        run: |
+          node scripts/capture_demo.mjs
+          ffmpeg -hide_banner -loglevel error -y -i demo/signal-atlas-live-demo.webm -c:v libx264 -preset fast -crf 29 -pix_fmt yuv420p -movflags +faststart demo/signal-atlas-live-demo.mp4
+      - name: Upload actual production video and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: signal-atlas-real-browser-demo
+          path: |
+            cmc-signal-atlas/demo/*.mp4
+            cmc-signal-atlas/demo/*.png
+          if-no-files-found: ignore
+          retention-days: 30
       - name: Upload sanitized audit receipt
         if: always()
         uses: actions/upload-artifact@v4
@@ -41,6 +63,9 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add evidence/live-response.json
+          if [ -f demo/signal-atlas-live-demo.mp4 ]; then
+            git add demo/signal-atlas-live-demo.mp4 demo/screenshot-live-overview.png demo/screenshot-api-evidence.png
+          fi
           if ! git diff --cached --quiet; then
             git commit -m "evidence(cmc): verified live HTTP responses [skip ci]"
             git push origin HEAD:main
