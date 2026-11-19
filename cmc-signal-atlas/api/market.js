@@ -52,6 +52,7 @@ async function overview(){
   const coins=normalizeCoins(data.listings);
   if(!coins.length)throw error('CMC response contained no usable assets',502,'EMPTY_MARKET');
   const insight=computeMarket(coins,data.global||{},data.sentiment||{},data.altcoin||{});
+  if(!insight.available||!Number.isFinite(insight.score))throw error('CMC returned unparseable or incomplete USD quotes; cannot publish a health score',502,'INVALID_QUOTES');
   const value={mode:'live',source:'CoinMarketCap Keyless Public API',at:new Date().toISOString(),coins,insight,cmc100:data.cmc100||null,partialErrors:errors,evidence};
   memory.overview={at:Date.now(),value};return value;
 }
