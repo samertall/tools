@@ -10,7 +10,9 @@ const round=(n,p=2)=>valid(n)?Number(n.toFixed(p)):null;
 function normalizeCoins(raw){
   if(!Array.isArray(raw)) return [];
   return raw.map(c=>{
-    const q=c?.quote?.USD || c?.quotes?.USD || {};
+    // CMC v3 listings uses quote:[{symbol:'USD',...}]; some legacy feeds use quote:{USD:{...}}.
+    const quote=c?.quote ?? c?.quotes ?? {};
+    const q=Array.isArray(quote)?(quote.find(x=>x?.symbol==='USD'||x?.id===2781)||{}):(quote?.USD||quote?.usd||{});
     return {
       id:Number(c.id)||0, rank:Number(c.cmc_rank)||null,
       name:String(c.name||''), symbol:String(c.symbol||''),
