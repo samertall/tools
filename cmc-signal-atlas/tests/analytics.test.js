@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const {normalizeCoins,computeMarket,analyzeRwa}=require('../lib/analytics');
 
 function coin(symbol,change,cap=100){
-  return {id:symbol==='BTC'?1:100+symbol.length,name:symbol,symbol,cmc_rank:1,quote:{USD:{price:100,market_cap:cap,volume_24h:10,percent_change_24h:change,percent_change_7d:4}}};
+  return {id:symbol==='BTC'?1:100+symbol.length,name:symbol,symbol,cmc_rank:1,quote:[{id:2781,symbol:'USD',price:100,market_cap:cap,volume_24h:10,percent_change_24h:change,percent_change_7d:4}]};
 }
 test('normalizes response and excludes stablecoins from market breadth',()=>{
   const list=normalizeCoins([coin('BTC',3,1000),coin('ALT',-2,100),coin('USDT',0,300)]);
@@ -43,4 +43,13 @@ test('reports missing wrapper comparisons as N/A rather than inventing zero spre
  const a=analyzeRwa({average_tokenized_price:200,tokens:[{symbol:'A',price:201}]});
  assert.equal(a.gapPct,null);
  assert.equal(a.largestIssuerShare,null);
+});
+
+test('supports CMC v3 quote array and legacy object shape',()=>{
+  const array=normalizeCoins([coin('BTC',4)])[0];
+  assert.equal(array.price,100);
+  assert.equal(array.change24h,4);
+  const legacy=normalizeCoins([{id:11,name:'Legacy',symbol:'LEG',quote:{USD:{price:30,market_cap:50,percent_change_24h:-4}}}])[0];
+  assert.equal(legacy.price,30);
+  assert.equal(legacy.change24h,-4);
 });
