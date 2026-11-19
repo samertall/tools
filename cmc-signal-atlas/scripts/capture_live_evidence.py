@@ -67,7 +67,7 @@ def main():
         try:
             http, data, digest=fetch(url)
             status=data.get("status") or {}
-            if http != 200 or status.get("error_code")!=0:
+            if http != 200 or str(status.get("error_code", "")) not in ("0", "0.0"):
                 raise RuntimeError(f"CMC status {http}, code {status.get('error_code')}")
             entry={"name":name,"request_method":"GET","request_url":url,
                    "http_status":http,"cmc_status":{k:status.get(k) for k in ("timestamp","error_code","credit_count")},
