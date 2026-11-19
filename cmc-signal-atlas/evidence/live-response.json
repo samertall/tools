@@ -1,0 +1,47 @@
+{
+  "provenance": "Unmodified live CoinMarketCap Public API data sampled by GitHub Actions runner",
+  "retrieved_at_utc": "2026-11-19T09:17:01.870743+00:00",
+  "command": "python3 scripts/capture_live_evidence.py",
+  "mocked": false,
+  "endpoints": [
+    {
+      "name": "global",
+      "request_method": "GET",
+      "request_url": "https://pro-api.coinmarketcap.com/public-api/v1/global-metrics/quotes/latest?convert=USD",
+      "http_status": 200,
+      "cmc_status": {
+        "timestamp": "2026-11-19T09:17:02.366Z",
+        "error_code": 0,
+        "credit_count": 1
+      },
+      "response_sha256": "8607bf5cb5d952c8454a1364d9c3d1307988d16d7d6effe5497288b05baffc37",
+      "response_excerpt": {
+        "btc_dominance": 58.937820508069,
+        "total_market_cap": 2174041028592.3643,
+        "total_volume_24h": 70587944208.56
+      }
+    }
+  ],
+  "app": {
+    "url": "https://signal-atlas-cmc-2026.vercel.app/api/market?view=overview",
+    "http_status": 200,
+    "mode": "live",
+    "source": "CoinMarketCap Keyless Public API",
+    "snapshot_at": "2026-11-19T09:17:02.830Z",
+    "asset_count": 100,
+    "source_endpoints": [
+      "/v3/cryptocurrency/listings/latest",
+      "/v1/global-metrics/quotes/latest",
+      "/v3/fear-and-greed/latest",
+      "/v1/altcoin-season-index/latest",
+      "/v3/index/cmc100-latest"
+    ],
+    "response_sha256": "4e858d46a7e6cf1d7d1a34ec4e4136287e79404ae60dc7a80070a20fac2bbfc9"
+  },
+  "errors": [
+    "CMC status 200, code 0",
+    "CMC status 200, code 0"
+  ],
+  "verified_provider_calls": 1,
+  "verified_app": true
+}
