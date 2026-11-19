@@ -1,6 +1,6 @@
 {
   "provenance": "Unmodified live CoinMarketCap Public API data sampled by GitHub Actions runner",
-  "retrieved_at_utc": "2026-11-19T09:28:50.569037+00:00",
+  "retrieved_at_utc": "2026-11-19T09:33:05.868011+00:00",
   "command": "python3 scripts/capture_live_evidence.py",
   "mocked": false,
   "endpoints": [
@@ -10,30 +10,30 @@
       "request_url": "https://pro-api.coinmarketcap.com/public-api/v3/cryptocurrency/listings/latest?start=1&limit=100&convert=USD",
       "http_status": 200,
       "cmc_status": {
-        "timestamp": "2026-11-19T09:28:50.814Z",
+        "timestamp": "2026-11-19T09:33:06.138Z",
         "error_code": "0",
         "credit_count": 1
       },
-      "response_sha256": "e1e8b9f75f07b71b5e35f933019b57b9e1c8d59cf7b792537b6ce0434255375b",
+      "response_sha256": "e4b5897a399a405cb75acb8a15c1bc86c17035515c20b1fc5fbbb1758a0c80d3",
       "response_excerpt": {
         "sample_assets": [
           {
             "id": 1,
             "symbol": "BTC",
             "rank": 1,
-            "price": 63623.254173692854,
-            "market_cap": 1279691667175.9219,
-            "percent_change_24h": -1.512079811992,
-            "last_updated": "2026-11-19T09:28:48.021Z"
+            "price": 63723.89127167467,
+            "market_cap": 1281715839899.6953,
+            "percent_change_24h": -1.342165592643,
+            "last_updated": "2026-11-19T09:33:03.026Z"
           },
           {
             "id": 1027,
             "symbol": "ETH",
             "rank": 2,
-            "price": 1797.5666957074975,
-            "market_cap": 219722558991.50357,
-            "percent_change_24h": -0.728610271797,
-            "last_updated": "2026-11-19T09:28:48.191Z"
+            "price": 1800.8012687710798,
+            "market_cap": 220117931620.7765,
+            "percent_change_24h": -0.559196771901,
+            "last_updated": "2026-11-19T09:33:03.216Z"
           }
         ],
         "total_records": 100
@@ -45,15 +45,15 @@
       "request_url": "https://pro-api.coinmarketcap.com/public-api/v1/global-metrics/quotes/latest?convert=USD",
       "http_status": 200,
       "cmc_status": {
-        "timestamp": "2026-11-19T09:28:50.963Z",
+        "timestamp": "2026-11-19T09:33:06.187Z",
         "error_code": 0,
         "credit_count": 1
       },
-      "response_sha256": "5d38252eb5d5a9c54a03abef40419628e8540f93c1f2862b89cde81084eaca0d",
+      "response_sha256": "9b3b30513ff38df5f40b5cfbd90a9f8535096649f76e97d7fe1ca4813ba1ad51",
       "response_excerpt": {
-        "btc_dominance": 58.939328030409,
-        "total_market_cap": 2173319651870.7585,
-        "total_volume_24h": 71219137605.42
+        "btc_dominance": 58.952828939921,
+        "total_market_cap": 2172559146002.4985,
+        "total_volume_24h": 70898190371.41
       }
     },
     {
@@ -62,11 +62,11 @@
       "request_url": "https://pro-api.coinmarketcap.com/public-api/v3/fear-and-greed/latest",
       "http_status": 200,
       "cmc_status": {
-        "timestamp": "2026-11-19T09:28:51.109Z",
+        "timestamp": "2026-11-19T09:33:06.212Z",
         "error_code": "0",
         "credit_count": 1
       },
-      "response_sha256": "59acb97472a947bebdbc5ed6448f9e671a91419fcf6063f65c5908f6cf8fd439",
+      "response_sha256": "399b8ab5f03d01fffa361f866ff4e40c25b7db884c3c90e224e2cd8a893ac40c",
       "response_excerpt": {
         "value": 12,
         "value_classification": "Extreme fear",
@@ -79,13 +79,16 @@
     "http_status": 200,
     "mode": "live",
     "source": "CoinMarketCap Keyless Public API",
-    "snapshot_at": "2026-11-19T09:28:51.421Z",
+    "snapshot_at": "2026-11-19T09:33:06.467Z",
     "asset_count": 100,
     "source_endpoints": [
       "/v3/cryptocurrency/listings/latest",
-      "/v1/global-metrics/quotes/latest"
+      "/v1/global-metrics/quotes/latest",
+      "/v3/fear-and-greed/latest",
+      "/v1/altcoin-season-index/latest",
+      "/v3/index/cmc100-latest"
     ],
-    "response_sha256": "7a523286cb6410aefb450691d89584c8c1ac269a439ad108edc3955052f43415"
+    "response_sha256": "ea911fd33252c0977a42a1b5698799240c893fcc68623dc2c43583a0703fe881"
   },
   "errors": [],
   "verified_provider_calls": 3,
