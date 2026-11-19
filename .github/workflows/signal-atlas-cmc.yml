@@ -45,12 +45,19 @@ jobs:
           npx playwright install chromium
       - name: Capture true live-market application browser demo
         id: demo
-        continue-on-error: true
         env:
           SIGNAL_ATLAS_URL: http://127.0.0.1:3000
         run: |
           node scripts/capture_demo.mjs
-          ffmpeg -hide_banner -loglevel error -y -i demo/signal-atlas-live-demo.webm -c:v libx264 -preset fast -crf 29 -pix_fmt yuv420p -movflags +faststart demo/signal-atlas-live-demo.mp4
+          test -s demo/signal-atlas-live-demo.webm
+          if ! command -v ffmpeg > /dev/null 2>&1; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg || true
+          fi
+          if command -v ffmpeg > /dev/null 2>&1; then
+            ffmpeg -hide_banner -loglevel error -y -i demo/signal-atlas-live-demo.webm -c:v libx264 -preset fast -crf 29 -pix_fmt yuv420p -movflags +faststart demo/signal-atlas-live-demo.mp4
+          else
+            echo "MP4 conversion unavailable; verified original WEBM remains intact."
+          fi
       - name: Upload true live-market video and screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -58,6 +65,7 @@ jobs:
           name: signal-atlas-real-browser-demo
           path: |
             cmc-signal-atlas/demo/*.mp4
+            cmc-signal-atlas/demo/*.webm
             cmc-signal-atlas/demo/*.png
           if-no-files-found: ignore
           retention-days: 30
@@ -75,8 +83,9 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add evidence/live-response.json
+          git add demo/signal-atlas-live-demo.webm demo/screenshot-live-overview.png demo/screenshot-api-evidence.png
           if [ -f demo/signal-atlas-live-demo.mp4 ]; then
-            git add demo/signal-atlas-live-demo.mp4 demo/screenshot-live-overview.png demo/screenshot-api-evidence.png
+            git add demo/signal-atlas-live-demo.mp4
           fi
           if ! git diff --cached --quiet; then
             git commit -m "evidence(cmc): verified live HTTP responses [skip ci]"
