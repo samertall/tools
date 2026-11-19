@@ -1,24 +1,59 @@
 {
   "provenance": "Unmodified live CoinMarketCap Public API data sampled by GitHub Actions runner",
-  "retrieved_at_utc": "2026-11-19T09:17:55.857787+00:00",
+  "retrieved_at_utc": "2026-11-19T09:25:57.902670+00:00",
   "command": "python3 scripts/capture_live_evidence.py",
   "mocked": false,
   "endpoints": [
+    {
+      "name": "listings",
+      "request_method": "GET",
+      "request_url": "https://pro-api.coinmarketcap.com/public-api/v3/cryptocurrency/listings/latest?start=1&limit=100&convert=USD",
+      "http_status": 200,
+      "cmc_status": {
+        "timestamp": "2026-11-19T09:26:01.408Z",
+        "error_code": "0",
+        "credit_count": 1
+      },
+      "response_sha256": "2450ba39e3807b40446dbd1dbc3711d2e34d0a1386d170b59b6701654e9ead85",
+      "response_excerpt": {
+        "sample_assets": [
+          {
+            "id": 1,
+            "symbol": "BTC",
+            "rank": 1,
+            "price": 63721.76657345877,
+            "market_cap": 1281673104603.655,
+            "percent_change_24h": -1.382168506336,
+            "last_updated": "2026-11-19T09:25:48.019Z"
+          },
+          {
+            "id": 1027,
+            "symbol": "ETH",
+            "rank": 2,
+            "price": 1801.2588545240583,
+            "market_cap": 220173863850.07434,
+            "percent_change_24h": -0.499310164898,
+            "last_updated": "2026-11-19T09:25:48.186Z"
+          }
+        ],
+        "total_records": 100
+      }
+    },
     {
       "name": "global",
       "request_method": "GET",
       "request_url": "https://pro-api.coinmarketcap.com/public-api/v1/global-metrics/quotes/latest?convert=USD",
       "http_status": 200,
       "cmc_status": {
-        "timestamp": "2026-11-19T09:18:03.752Z",
+        "timestamp": "2026-11-19T09:26:01.607Z",
         "error_code": 0,
         "credit_count": 1
       },
-      "response_sha256": "3bacb914dda66e0e13cc4a2031c4a0f79305d2da38f51b82169cbb259c9e7fe4",
+      "response_sha256": "546c47d5945257e84c3c40b02b9fed8d6d30bc8250c47744b2abfdf3adc650dd",
       "response_excerpt": {
-        "btc_dominance": 58.949061955024,
-        "total_market_cap": 2174519382208.2634,
-        "total_volume_24h": 70267373045.32
+        "btc_dominance": 58.946371904556,
+        "total_market_cap": 2174526791182.9934,
+        "total_volume_24h": 71162859574.8
       }
     },
     {
@@ -27,11 +62,11 @@
       "request_url": "https://pro-api.coinmarketcap.com/public-api/v3/fear-and-greed/latest",
       "http_status": 200,
       "cmc_status": {
-        "timestamp": "2026-11-19T09:18:03.834Z",
+        "timestamp": "2026-11-19T09:26:01.723Z",
         "error_code": "0",
         "credit_count": 1
       },
-      "response_sha256": "fa2e2650a0a7cac377be2e4d528d9ee5fce23346fab68083cc9a8052aef76338",
+      "response_sha256": "85e66e29b550f253a29fc6773afbe94beac88334a2c8c453b9899f7b3830c703",
       "response_excerpt": {
         "value": 12,
         "value_classification": "Extreme fear",
@@ -40,11 +75,11 @@
     }
   ],
   "app": {
-    "url": "https://signal-atlas-cmc-2026.vercel.app/api/market?view=overview",
+    "url": "http://127.0.0.1:3000/api/market?view=overview",
     "http_status": 200,
     "mode": "live",
     "source": "CoinMarketCap Keyless Public API",
-    "snapshot_at": "2026-11-19T09:18:04.176Z",
+    "snapshot_at": "2026-11-19T09:26:02.058Z",
     "asset_count": 100,
     "source_endpoints": [
       "/v3/cryptocurrency/listings/latest",
@@ -53,11 +88,9 @@
       "/v1/altcoin-season-index/latest",
       "/v3/index/cmc100-latest"
     ],
-    "response_sha256": "f724712184e21f6ba8f05700c79c724442cc1e8653b2939853d8d184f1b5285e"
+    "response_sha256": "18eb90c70009451fcaa6df7ebc98ac1a70d2822daecc1f3934ccf35bed8b98e4"
   },
-  "errors": [
-    "'list' object has no attribute 'get'"
-  ],
-  "verified_provider_calls": 2,
+  "errors": [],
+  "verified_provider_calls": 3,
   "verified_app": true
 }
