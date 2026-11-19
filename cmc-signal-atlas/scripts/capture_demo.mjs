@@ -19,7 +19,7 @@ const page=await context.newPage();
 page.on('pageerror',err=>console.error('Browser error: '+err.message));
 try{
   const res=await page.goto(origin,{waitUntil:'domcontentloaded',timeout:60000});
-  if(!res||!res.ok())throw new Error('Production homepage HTTP response unavailable');
+  if(!res||!res.ok())throw new Error('Application homepage HTTP response unavailable');
   await page.waitForFunction(()=>{
      const pill=document.querySelector('#source-pill')?.textContent||'';
      const score=document.querySelector('#score')?.textContent||'';

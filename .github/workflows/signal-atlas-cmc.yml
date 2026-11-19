@@ -23,23 +23,35 @@ jobs:
           node-version: '22'
       - name: Syntax + unit + contract tests
         run: npm run check
-      - name: Capture actual CMC HTTP responses and deployed API
+      - name: Launch actual application on CI runner
+        run: |
+          nohup node dev-server.js > /tmp/signal-atlas-app.log 2>&1 &
+          for i in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:3000/ > /dev/null; then
+              echo "Local application ready"; break
+            fi
+            sleep 1
+          done
+      - name: Capture actual CMC HTTP responses and verified live application
         env:
-          SIGNAL_ATLAS_URL: https://signal-atlas-cmc-2026.vercel.app
-        run: python3 scripts/capture_live_evidence.py
+          SIGNAL_ATLAS_URL: http://127.0.0.1:3000
+        run: |
+          python3 scripts/capture_live_evidence.py
+          echo "--- Local app log (no secret headers) ---"
+          tail -n 20 /tmp/signal-atlas-app.log
       - name: Install browser automation tools
         run: |
           npm install --no-save playwright
           npx playwright install chromium
-      - name: Capture true production browser demo
+      - name: Capture true live-market application browser demo
         id: demo
         continue-on-error: true
         env:
-          SIGNAL_ATLAS_URL: https://signal-atlas-cmc-2026.vercel.app
+          SIGNAL_ATLAS_URL: http://127.0.0.1:3000
         run: |
           node scripts/capture_demo.mjs
           ffmpeg -hide_banner -loglevel error -y -i demo/signal-atlas-live-demo.webm -c:v libx264 -preset fast -crf 29 -pix_fmt yuv420p -movflags +faststart demo/signal-atlas-live-demo.mp4
-      - name: Upload actual production video and screenshots
+      - name: Upload true live-market video and screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
