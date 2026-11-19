@@ -24,7 +24,7 @@ try{
      const pill=document.querySelector('#source-pill')?.textContent||'';
      const score=document.querySelector('#score')?.textContent||'';
      const tiles=document.querySelectorAll('#heatmap .tile').length;
-     return pill.includes('LIVE') && /^\\d+$/.test(score.trim()) && tiles>=20;
+     return pill.includes('LIVE') && /^\d+$/.test(score.trim()) && tiles>=20;
   },null,{timeout:80000});
   console.log('LIVE validated: score',await page.locator('#score').innerText(),
               'tiles',await page.locator('#heatmap .tile').count());
