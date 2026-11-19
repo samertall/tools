@@ -2,7 +2,7 @@
 **Event:** Build with CMC: API Hackathon Round 2, November–December 2026
 **Deadline:** December 9, 2026, 23:59 UTC
 **Maker:** Samer Tallauze
-**Recommended track:** Markets and Trading Tools
+**Selected recommended track:** Markets and Trading Tools
 
 ## Title
 Signal Atlas — Explainable Market Intelligence Powered by CoinMarketCap
@@ -33,7 +33,11 @@ Responsive, accessible HTML/CSS/JavaScript front end; server-side Node.js CMC ad
 - **Product demo:** https://signal-atlas-cmc-2026.vercel.app
 - **Public GitHub:** https://github.com/samertall/tools/tree/main/cmc-signal-atlas
 - **DoraHacks project URL:** [Add only after the project has actually been submitted]
-- **Short demo video:** [Add after recording and publishing]
+- **Short demo video (real CMC browser recording):** https://github.com/samertall/tools/blob/main/cmc-signal-atlas/demo/signal-atlas-live-demo.mp4
+- **Verified provider receipts (three genuine HTTP 200 responses):** https://github.com/samertall/tools/blob/main/cmc-signal-atlas/evidence/live-response.json
+- **Public automated verification run:** https://github.com/samertall/tools/actions/runs/44496771579
+- **Live overview screenshot:** https://github.com/samertall/tools/blob/main/cmc-signal-atlas/demo/screenshot-live-overview.png
+- **Live API-evidence screenshot:** https://github.com/samertall/tools/blob/main/cmc-signal-atlas/demo/screenshot-api-evidence.png
 - **X/Twitter post:** [Add actual public X post URL after publishing]
 
 ### Explicit endpoints
@@ -56,7 +60,7 @@ Open the live deployed product, click **API evidence**, and paste or screenshot 
 ## Responsible API feedback (review and update after real tests)
 **Enabled:** Keyless publicly documented CMC routes make live prototypes possible without placing credentials in a browser. Standard response envelopes reduce integration complexity. Authenticated RWA routes centralize token and issuer records.
 
-**Friction to assess and document after testing:** The keyless API uses a shared IP pool, which complicates demos in shared serverless environments. RWA list response contains aggregate asset quotes, whereas token-level details require a second batched Quotes Latest call. Missing/null token prices limit dispersion comparisons. An explicit completeness indicator for token/issuer coverage would support safer analytics.
+**Observed during real integration:** The keyless CMC v3 listings response represents the USD quote as a `quote` **array of currency objects**, whereas legacy consumers often expect `quote.USD` as an object. Our original normalization silently resulted in an empty computed score although the endpoint returned 100 assets with HTTP 200. We corrected the parser and added regression tests. The keyless API also uses a shared IP rate pool, relevant for serverless infrastructure. The RWA list has aggregate values; detailed wrapper/issuer prices require an additional batched Quotes Latest call. Provider coverage and null handling should be explicit. An API-level token coverage/completeness indicator would make this easier.
 
 **Do not claim:** User research, profitability, realized financial outcomes, confirmed live RWA API calls or successful API responses unless directly evidenced.
 
@@ -69,7 +73,7 @@ Open the live deployed product, click **API evidence**, and paste or screenshot 
 ✅ Tokenized RWA research
 
 Live demo: https://signal-atlas-cmc-2026.vercel.app
-Demo video: [VIDEO_URL]
+Demo video: https://github.com/samertall/tools/blob/main/cmc-signal-atlas/demo/signal-atlas-live-demo.mp4
 DoraHacks submission: [DORAHACKS_SUBMISSION_URL]
 
 #BuildwithCMC #CoinMarketCap #Crypto #FinTech #BuildInPublic
@@ -80,10 +84,16 @@ DoraHacks submission: [DORAHACKS_SUBMISSION_URL]
 - [x] CMC endpoint names documented
 - [x] API adapter, explainable calculations and mocked integration tests committed
 - [x] Demo UI explicitly distinguishes live vs synthetic data
-- [ ] Verify a real HTTP 200 from CMC in the deployed Evidence screen
+- [x] Verify CMC HTTP 200 directly (listings, global metrics and sentiment)
+- [x] Verify actual app with real CMC prices and health score in GitHub Actions localhost
+- [x] Capture live API evidence and UI screenshots without mocking
+- [ ] Deploy the corrected version to public Vercel URL (currently blocked by Vercel Hobby build limit)
 - [ ] Activate authenticated RWA module by adding a CMC API key in Vercel env settings (optional for Markets track)
-- [ ] Observe passing GitHub Actions test results
-- [ ] Record and publish screen recording
+- [x] Observe passing GitHub Actions test results (9/9)
+- [x] Record and publish screen recording (GitHub MP4)
 - [ ] Publish DoraHacks BUIDL
 - [ ] Publish X post with DoraHacks URL, demo video URL and #BuildwithCMC
 - [ ] Paste X URL into submission form and confirm submission success
+
+## Verification summary (19 Nov 2026)
+The GitHub Actions job `44496771579` passed: 9 automated tests, live provider listings/global/sentiment HTTP 200, the corrected app started on CI with 100 real assets, and browser recording confirmed a rendered health score of 38 with 50 heatmap tiles at recording time. The video and screenshots are generated from the actual backend and real CMC data, not fixtures. The local CI URL in the proof is a temporary GitHub Actions localhost service; it is **not a public deployment**. The public Vercel app exists but an updated build must succeed before treating it as equivalent to the tested version. No authenticated RWA endpoint call has yet been demonstrated.
