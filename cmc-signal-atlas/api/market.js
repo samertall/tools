@@ -31,7 +31,13 @@ async function getCMC(path,key){
   }finally{clearTimeout(timeout);}
 }
 function buildProof(path,result){
-  return {endpoint:path.split('?')[0],query:path.includes('?')?path.split('?')[1]:'',httpStatus:result.httpStatus,cmcTimestamp:result.status.timestamp||null,creditCount:result.status.credit_count??null,apiErrorCode:result.status.error_code??0,returnedDataType:Array.isArray(result.data)?'array':typeof result.data,returnedItems:Array.isArray(result.data)?result.data.length:Array.isArray(result.data?.rwa_assets)?result.data.rwa_assets.length:null};
+  let excerpt=null;
+  if(Array.isArray(result.data)) excerpt=result.data[0]||null;
+  else if(Array.isArray(result.data?.rwa_assets)) excerpt=result.data.rwa_assets[0]||null;
+  else if(result.data&&typeof result.data==='object') excerpt=result.data;
+  const serialized=excerpt?JSON.stringify(excerpt):'';
+  if(serialized.length>2400) excerpt={preview:serialized.slice(0,2400),truncated:true};
+  return {endpoint:path.split('?')[0],query:path.includes('?')?path.split('?')[1]:'',httpStatus:result.httpStatus,cmcTimestamp:result.status.timestamp||null,creditCount:result.status.credit_count??null,apiErrorCode:result.status.error_code??0,returnedDataType:Array.isArray(result.data)?'array':typeof result.data,returnedItems:Array.isArray(result.data)?result.data.length:Array.isArray(result.data?.rwa_assets)?result.data.rwa_assets.length:null,responseExcerpt:excerpt};
 }
 async function overview(){
   if(memory.overview&&Date.now()-memory.overview.at<TTL)return {...memory.overview.value,cached:true};
@@ -65,7 +71,19 @@ async function rwa(){
     else errors[name]=out.reason?.message||'Request failed';
   }
   if(!data.rwa)throw error('RWA request failed: '+(errors.rwa||''),503,'RWA_SOURCE_UNAVAILABLE');
-  const assets=(data.rwa?.rwa_assets||[]).map(row=>({...row,analysis:analyzeRwa(row)}));
+  // Enrich list rows with token/issuer quotes in ONE batched CMC call.
+  const listed=data.rwa?.rwa_assets||[];
+  const ids=listed.filter(x=>Number.isInteger(x.rwa_id)).map(x=>x.rwa_id).slice(0,100).join(',');
+  let enriched=new Map();
+  if(ids){
+    const detailPath='/v5/real-world-assets/quotes/latest?rwa_id='+ids+'&convert=USD';
+    try{
+      const detailed=await getCMC(detailPath,key);
+      evidence.push(buildProof(detailPath,detailed));
+      enriched=new Map((detailed.data?.rwa_assets||[]).map(x=>[x.rwa_id,x]));
+    }catch(e){errors.quotes=e.message||'Quote details unavailable';}
+  }
+  const assets=listed.map(row=>{const combined={...row,...(enriched.get(row.rwa_id)||{})};return {...combined,analysis:analyzeRwa(combined)};});
   const value={mode:'live',at:new Date().toISOString(),assets,issuers:data.issuers?.issuers||[],evidence,partialErrors:errors,source:'CoinMarketCap authenticated RWA API'};
   memory.rwa={at:Date.now(),value};return value;
 }
