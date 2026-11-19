@@ -45,7 +45,8 @@ def sample(name,payload):
             raise RuntimeError("Listings returned no array")
         records = []
         for asset in data[:2]:
-            q=(asset.get("quote") or {}).get("USD") or {}
+            quotes=asset.get("quote") or {}
+            q=next((x for x in quotes if isinstance(x,dict) and (x.get("symbol")=="USD" or x.get("id")==2781)),{}) if isinstance(quotes,list) else (quotes.get("USD") or {})
             records.append({"id":asset.get("id"),"symbol":asset.get("symbol"),"rank":asset.get("cmc_rank"),
                             "price":q.get("price"),"market_cap":q.get("market_cap"),"percent_change_24h":q.get("percent_change_24h"),
                             "last_updated":q.get("last_updated")})
@@ -80,7 +81,7 @@ def main():
     # Application probe asserts the actual Vercel project is connected to CMC.
     try:
         http, app, digest=fetch(APP_URL+"/api/market?view=overview")
-        if http!=200 or app.get("mode")!="live" or not app.get("evidence") or not app.get("coins"):
+        if http!=200 or app.get("mode")!="live" or not app.get("evidence") or not app.get("coins") or not (app.get("insight") or {}).get("available") or not isinstance((app.get("insight") or {}).get("score"),(int,float)) or not any(isinstance(c.get("price"),(int,float)) and c["price"]>0 for c in app.get("coins",[])):
             raise RuntimeError(f"App response not LIVE (HTTP {http}, mode={app.get('mode')}, error={app.get('error')})")
         evidence["app"]={"url":APP_URL+"/api/market?view=overview","http_status":http,"mode":app.get("mode"),
                          "source":app.get("source"),"snapshot_at":app.get("at"),"asset_count":len(app.get("coins")),
