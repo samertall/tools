@@ -1,0 +1,24 @@
+name: Signal Atlas CI
+on:
+  push:
+    paths:
+      - 'cmc-signal-atlas/**'
+      - '.github/workflows/signal-atlas-cmc.yml'
+  pull_request:
+    paths:
+      - 'cmc-signal-atlas/**'
+      - '.github/workflows/signal-atlas-cmc.yml'
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cmc-signal-atlas
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and unit tests
+        run: npm run check
